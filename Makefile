@@ -32,8 +32,8 @@ RM = rm -f
 DEFAULT=ogham
 endif
 
-DLFLAGS_WIN = -L. -l$(LIBNAME)
-DLFLAGS_NIX = -l $(LIBNAME)
+DLFLAGS_WIN = -L. -lzed
+DLFLAGS_NIX = -lzed
 
 default: $(DEFAULT)
 
