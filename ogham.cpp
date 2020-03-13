@@ -1,74 +1,68 @@
-#include <z/core.h>
-#include <z/system.h>
+#include <z/core/string.hpp>
+#include <z/system/console.hpp>
 
-using namespace z;
-
-#define s core::string<utf32>
-
-s translate(const s arg);
+zstring translate(const zstring& arg);
 
 int main(int argc, char** argv)
 {
-	system::console console;
+	z::system::console console;
 
-	core::string<utf8> args;
-	for (int i=1; i<argc; i++)
-	{
-		if (i > 1) args += ' ';
-		args += argv[i];
-	}
-
-	args = args.lower();
-
+	zstring args;
 	if (argc > 1)
 	{
+		for (int i=1; i<argc; i++)
+		{
+			if (i > 1) args += ' ';
+			args += argv[i];
+		}
+
+		args.toLower();
 		translate(args).writeln(console);
 	}
 	else
 	{
-		while(true)
+		while(!console.empty())
 		{
 			args.readln(console);
-			translate(args.lower()).writeln(console);
-			console.flush();
+			args.toLower();
+			translate(args).writeln(console);
 		}
 	}
+
+	return 0;
 }
 
-s translate(const s arg)
+zstring translate(const zstring& arg)
 {
-	const s english = "abcdefghijklmnopqrstuvwxyz ";
-	const s ogham   = L"ᚐᚁᚉᚇᚓᚃᚌᚆᚔᚌᚊᚂᚋᚅᚑᚚᚊᚏᚄᚈᚒᚃᚒᚎᚔᚎ ";
+	const zstring english = "abcdefghijklmnopqrstuvwxyz ";
+	const zstring ogham   = L"ᚐᚁᚉᚇᚓᚃᚌᚆᚔᚌᚊᚂᚋᚅᚑᚚᚊᚏᚄᚈᚒᚃᚒᚎᚔᚎ ";
 
 	bool toOgham = false;
-	bool isOgham = false;
 	uint32_t ogOpen = L'᚛', ogClose = L'᚜';
-	s result;
-	for (size_t i=0; i<arg.length(); i++)
+	zstring result;
+
+	for (auto ch : arg)
 	{
-		int index;
-		if ((index = ogham.find(arg[i])) >= 0)
+		if ((ch == ogOpen) || (ch == ogClose)) continue;
+
+		auto index = ogham.find(ch);
+		if (index >= 0)
 		{
-			isOgham = true;
 			result += english[index];
+			continue;
 		}
-		else if (!isOgham && ((index = english.find(arg[i])) >= 0))
+
+		index = english.find(ch);
+		if (index >= 0)
 		{
 			toOgham = true;
 			result += ogham[index];
+			continue;
 		}
-		else
-		{
-			if ((arg[i] != ogOpen) && (arg[i] != ogClose))
-				result += arg[i];
-			else
-				isOgham = true;
-		}
+
+		result += ch;
 	}
 
-	if (toOgham)
-	{
-		result = s(ogOpen) + result + s(ogClose);
-	}
+	if (toOgham) result = zstring(ogOpen) + result + ogClose;
 	return result;
 }
