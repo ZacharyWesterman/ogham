@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 {
 	z::system::console console;
 
-	zstring args;
+	zpath args;
 	if (argc > 1)
 	{
 		for (int i=1; i<argc; i++)
@@ -63,6 +63,6 @@ zstring translate(const zstring& arg)
 		result += ch;
 	}
 
-	if (toOgham) result = zstring(ogOpen) + result + ogClose;
+	if (toOgham) result = zstring(ogOpen) + zstring(result) + zstring(ogClose);
 	return result;
 }
