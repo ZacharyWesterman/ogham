@@ -11,8 +11,7 @@ CCTARGET =
 endif
 endif
 
-INCLUDE = -I"../libzed"
-CCFLAGS = $(INCLUDE) -std=c++11 -g -W -Wall -Wextra -pedantic -fexceptions -O4 $(CCTARGET)
+CCFLAGS = -std=c++11 -g -W -Wall -Wextra -pedantic -fexceptions -O4 $(CCTARGET)
 
 STATIC_LIB = $(LIBNAME).a
 DLL = $(LIBNAME).dll
@@ -38,10 +37,10 @@ DLFLAGS_NIX = -lzed
 default: $(DEFAULT)
 
 ogham: ogham.o
-	g++ $(DLFLAGS_NIX) -o $@ $^
+	g++ -o $@ $^ $(DLFLAGS_NIX)
 
 ogham.exe: ogham.o
-	g++ $(DLFLAGS_WIN) -o $@ $^
+	g++ -o $@ $^ $(DLFLAGS_WIN)
 
 ogham.o: ogham.cpp
 	g++ $(CCFLAGS) -o $@ -c $^
