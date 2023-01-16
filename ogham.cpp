@@ -1,8 +1,6 @@
 #include <z/core/string.hpp>
 #include <z/system/console.hpp>
 
-zstring translate(const zstring& arg);
-
 int main(int argc, char** argv)
 {
 	z::system::console console;
